@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LoL Champion Finder v3</title>
+<title>LoL Champion Finder</title>
 <style>
+
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;700&display=swap');
 :root{
   --bg:#050810;--panel:#0b1020;--panel2:#0d1428;
@@ -92,6 +93,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 @keyframes fadeD{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeU{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideR{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
+
 </style>
 </head>
 <body>
@@ -106,22 +108,22 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 <div id="s-role">
   <div class="role-grid">
-    <button class="rbtn r-top" onclick="go('top')"><span class="ri">⚔️</span><div class="rn">TOP</div><div class="rs">トップレーン</div></button>
-    <button class="rbtn r-jg"  onclick="go('jg')"><span class="ri">🌿</span><div class="rn">JG</div><div class="rs">ジャングル</div></button>
-    <button class="rbtn r-mid" onclick="go('mid')"><span class="ri">✨</span><div class="rn">MID</div><div class="rs">ミッドレーン</div></button>
-    <button class="rbtn r-bot" onclick="go('bot')"><span class="ri">🎯</span><div class="rn">BOT</div><div class="rs">ボットレーン</div></button>
-    <button class="rbtn r-sup" onclick="go('sup')"><span class="ri">🛡️</span><div class="rn">SUP</div><div class="rs">サポート</div></button>
+    <button class="rbtn r-top" id="btn-top"><span class="ri">⚔️</span><div class="rn">TOP</div><div class="rs">トップレーン</div></button>
+    <button class="rbtn r-jg"  id="btn-jg"><span class="ri">🌿</span><div class="rn">JG</div><div class="rs">ジャングル</div></button>
+    <button class="rbtn r-mid" id="btn-mid"><span class="ri">✨</span><div class="rn">MID</div><div class="rs">ミッドレーン</div></button>
+    <button class="rbtn r-bot" id="btn-bot"><span class="ri">🎯</span><div class="rn">BOT</div><div class="rs">ボットレーン</div></button>
+    <button class="rbtn r-sup" id="btn-sup"><span class="ri">🛡️</span><div class="rn">SUP</div><div class="rs">サポート</div></button>
   </div>
 </div>
 
-<div id="s-quiz">
+<div id="s-quiz" style="display:none">
   <div class="qhdr"><div class="rbadge" id="qbadge"></div><div class="qtitle">チャンプ診断</div></div>
   <div class="prow"><span class="plbl" id="plbl">Q1/10</span><span class="plbl" id="ppct">0%</span></div>
   <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
   <div id="qwrap"></div>
 </div>
 
-<div id="s-res">
+<div id="s-res" style="display:none">
   <div class="res-hero">
     <div class="res-eye">// 診断結果</div>
     <div class="res-name" id="rname">---</div>
@@ -131,18 +133,15 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <div class="picks" id="rpicks"></div>
   <div class="comment" id="rcomment"></div>
   <div class="btns">
-    <button class="btn-s" onclick="retry()">↺ 再診断</button>
-    <button class="btn-p" onclick="top()">▤ ロール選択</button>
+    <button class="btn-s" id="btn-retry">↺ 再診断</button>
+    <button class="btn-p" id="btn-top2">▤ ロール選択</button>
   </div>
 </div>
 
 </div>
 
 <script>
-// ============================================================
-// TOP LANE — 24 champs, 10 questions
-// ============================================================
-const TOP={
+var TOP={
   label:'TOP LANE',color:'#e8563a',
   qs:[
     {q:'序盤のレーン戦、どんなスタイルが好き？',
@@ -387,7 +386,8 @@ const TOP={
 // ============================================================
 // JUNGLE — 24 champs, 10 questions
 // ============================================================
-const JG={
+
+var JG={
   label:'JUNGLE',color:'#4db870',
   qs:[
     {q:'序盤のJG、何を最優先にする？',
@@ -622,7 +622,8 @@ const JG={
 // ============================================================
 // MID LANE — 24 champs, 10 questions
 // ============================================================
-const MID={
+
+var MID={
   label:'MID LANE',color:'#4a9fe8',
   qs:[
     {q:'レーン戦はどんなスタイルで戦いたい？',o:[{e:'💥',t:'バーストで対面を瞬殺、序盤からキルプレッシャー',v:'burst'},{e:'🏹',t:'遠距離ポークで安全に削ってリードを広げる',v:'poke'},{e:'🌱',t:'ファーム重視でスケール、後半に真価を発揮',v:'scale'},{e:'🗺️',t:'レーンを素早く処理してローム、マップへの影響を重視',v:'roam'}]},
@@ -773,7 +774,8 @@ const MID={
 // ============================================================
 // BOT / ADC — 24 champs, 10 questions
 // ============================================================
-const BOT={
+
+var BOT={
   label:'BOT / ADC',color:'#e8c43a',
   qs:[
     {q:'レーン戦のスタイルはどれが好み？',o:[{e:'🔫',t:'序盤から積極的にトレードして対面を倒しに行く',v:'aggressive'},{e:'🌱',t:'ファームに集中して後半スパイクで逆転する',v:'farm'},{e:'🏹',t:'遠距離ポークで相手を安全に削り続ける',v:'poke'},{e:'🔄',t:'状況に合わせて柔軟に動く',v:'flex'}]},
@@ -911,7 +913,8 @@ const BOT={
 // ============================================================
 // SUPPORT — 24 champs, 10 questions
 // ============================================================
-const SUP={
+
+var SUP={
   label:'SUPPORT',color:'#b04ae8',
   qs:[
     {q:'サポートとして何が一番好き？',o:[{e:'💥',t:'自分でエンゲージして試合を動かすのが好き',v:'engage'},{e:'💚',t:'ADCやチームメイトを守ってヒールするのが好き',v:'heal'},{e:'🧠',t:'CCや視界管理でゲームをコントロールするのが好き',v:'control'},{e:'⚡',t:'自分でキルを取って威圧するのが好き',v:'kill'}]},
@@ -1058,75 +1061,176 @@ const SUP={
 // ============================================================
 // ROLE MAP & CONTROLLER
 // ============================================================
-const ROLES={top:TOP,jg:JG,mid:MID,bot:BOT,sup:SUP};
-let curRole=null,curQ=0,ans=[];
 
-function go(role){
-  curRole=role; curQ=0; ans=[];
-  const D=ROLES[role];
-  const b=document.getElementById('qbadge');
-  b.textContent=D.label; b.style.color=D.color; b.style.borderColor=D.color;
-  const w=document.getElementById('qwrap'); w.innerHTML='';
-  D.qs.forEach((q,i)=>{
-    const d=document.createElement('div');
-    d.className='qcard'+(i===0?' on':''); d.id='q'+i;
-    d.innerHTML=`<div class="qnum">QUESTION ${String(i+1).padStart(2,'0')} / ${D.qs.length}</div>
-<div class="qtxt">${q.q}</div>
-<div class="opts">${q.o.map(o=>`<button class="opt" onclick="pick(${i},'${o.v}',event)"><span class="opt-e">${o.e}</span><span>${o.t}</span></button>`).join('')}</div>`;
-    w.appendChild(d);
-  });
-  document.getElementById('s-role').style.display='none';
-  document.getElementById('s-res').classList.remove('on');
-  const qs=document.getElementById('s-quiz');
-  qs.classList.add('on'); qs.style.display='block';
-  prog(0,D.qs.length);
+
+var ROLES = {top:TOP, jg:JG, mid:MID, bot:BOT, sup:SUP};
+var curRole = null;
+var curQ = 0;
+var ans = [];
+
+function startRole(role) {
+  curRole = role;
+  curQ = 0;
+  ans = [];
+  var D = ROLES[role];
+
+  // バッジ
+  var badge = document.getElementById('qbadge');
+  badge.textContent = D.label;
+  badge.style.color = D.color;
+  badge.style.borderColor = D.color;
+
+  // 質問カード生成
+  var wrap = document.getElementById('qwrap');
+  wrap.innerHTML = '';
+
+  for (var i = 0; i < D.qs.length; i++) {
+    var q = D.qs[i];
+    var card = document.createElement('div');
+    card.id = 'q' + i;
+    card.className = 'qcard';
+    card.style.display = i === 0 ? 'block' : 'none';
+
+    var num = document.createElement('div');
+    num.className = 'qnum';
+    num.textContent = 'QUESTION ' + ('0' + (i + 1)).slice(-2) + ' / ' + D.qs.length;
+    card.appendChild(num);
+
+    var txt = document.createElement('div');
+    txt.className = 'qtxt';
+    txt.textContent = q.q;
+    card.appendChild(txt);
+
+    var opts = document.createElement('div');
+    opts.className = 'opts';
+
+    for (var j = 0; j < q.o.length; j++) {
+      (function(qi, opt) {
+        var btn = document.createElement('button');
+        btn.className = 'opt';
+
+        var em = document.createElement('span');
+        em.className = 'opt-e';
+        em.textContent = opt.e;
+        btn.appendChild(em);
+
+        var sp = document.createElement('span');
+        sp.textContent = opt.t;
+        btn.appendChild(sp);
+
+        btn.addEventListener('click', function() {
+          selectAnswer(qi, opt.v, btn);
+        });
+        opts.appendChild(btn);
+      })(i, q.o[j]);
+    }
+
+    card.appendChild(opts);
+    wrap.appendChild(card);
+  }
+
+  // 画面切り替え
+  document.getElementById('s-role').style.display = 'none';
+  document.getElementById('s-res').style.display = 'none';
+  document.getElementById('s-quiz').style.display = 'block';
+
+  updateProgress(0, D.qs.length);
 }
 
-function pick(qi,val,ev){
-  ans[qi]=val;
-  if(ev) ev.currentTarget.classList.add('sel');
-  const total=ROLES[curRole].qs.length;
-  setTimeout(()=>{
-    document.getElementById('q'+qi).classList.remove('on');
-    if(qi<total-1){
-      curQ=qi+1;
-      document.getElementById('q'+curQ).classList.add('on');
-      prog(curQ,total);
-    } else { prog(total,total); showRes(); }
-  },240);
+function selectAnswer(qi, val, btn) {
+  ans[qi] = val;
+
+  // 選択肢を全部無効化
+  var allBtns = document.getElementById('q' + qi).querySelectorAll('.opt');
+  for (var i = 0; i < allBtns.length; i++) {
+    allBtns[i].disabled = true;
+  }
+  btn.classList.add('sel');
+
+  var total = ROLES[curRole].qs.length;
+
+  setTimeout(function() {
+    document.getElementById('q' + qi).style.display = 'none';
+
+    if (qi < total - 1) {
+      var nextQ = qi + 1;
+      document.getElementById('q' + nextQ).style.display = 'block';
+      updateProgress(nextQ, total);
+    } else {
+      updateProgress(total, total);
+      showResult();
+    }
+  }, 280);
 }
 
-function prog(cur,total){
-  const p=Math.round(cur/total*100);
-  document.getElementById('pfill').style.width=p+'%';
-  document.getElementById('plbl').textContent=cur>=total?'COMPLETE':`Q${cur+1}/${total}`;
-  document.getElementById('ppct').textContent=p+'%';
+function updateProgress(cur, total) {
+  var pct = Math.round(cur / total * 100);
+  document.getElementById('pfill').style.width = pct + '%';
+  document.getElementById('plbl').textContent = cur >= total ? 'COMPLETE' : 'Q' + (cur + 1) + '/' + total;
+  document.getElementById('ppct').textContent = pct + '%';
 }
 
-function showRes(){
-  const D=ROLES[curRole];
-  const key=D.calc(ans);
-  const R=D.ch[key];
-  document.getElementById('rname').textContent=R.name;
-  document.getElementById('rarch').textContent=R.arch;
-  document.getElementById('rstats').innerHTML=R.st.map(s=>`<div class="scell"><span class="sv">${s.v}</span><span class="sk">${s.k}</span></div>`).join('');
-  document.getElementById('rpicks').innerHTML=R.picks.map((p,i)=>`<div class="pick ${i===0?'top':''}"><div class="pname">${p.name}</div><div class="pdesc">${p.desc}</div><div class="ptags">${p.tags.map(t=>`<span class="ptag">${t}</span>`).join('')}</div></div>`).join('');
-  document.getElementById('rcomment').textContent=R.comment;
-  document.getElementById('s-quiz').style.display='none';
-  document.getElementById('s-res').classList.add('on');
+function showResult() {
+  var D = ROLES[curRole];
+  var key = D.calc(ans);
+  var R = D.ch[key];
+
+  // fallback
+  if (!R) {
+    var keys = Object.keys(D.ch);
+    R = D.ch[keys[0]];
+  }
+
+  document.getElementById('rname').textContent = R.name;
+  document.getElementById('rarch').textContent = R.arch;
+
+  var statsHtml = '';
+  for (var i = 0; i < R.st.length; i++) {
+    statsHtml += '<div class="scell"><span class="sv">' + R.st[i].v + '</span><span class="sk">' + R.st[i].k + '</span></div>';
+  }
+  document.getElementById('rstats').innerHTML = statsHtml;
+
+  var picksHtml = '';
+  for (var i = 0; i < R.picks.length; i++) {
+    var p = R.picks[i];
+    var tagsHtml = '';
+    for (var j = 0; j < p.tags.length; j++) {
+      tagsHtml += '<span class="ptag">' + p.tags[j] + '</span>';
+    }
+    picksHtml += '<div class="pick' + (i === 0 ? ' top' : '') + '">';
+    picksHtml += '<div class="pname">' + p.name + '</div>';
+    picksHtml += '<div class="pdesc">' + p.desc + '</div>';
+    picksHtml += '<div class="ptags">' + tagsHtml + '</div>';
+    picksHtml += '</div>';
+  }
+  document.getElementById('rpicks').innerHTML = picksHtml;
+  document.getElementById('rcomment').textContent = R.comment;
+
+  document.getElementById('s-quiz').style.display = 'none';
+  document.getElementById('s-res').style.display = 'block';
 }
 
-function retry(){
-  document.getElementById('s-res').classList.remove('on');
-  go(curRole);
+function retryQuiz() {
+  document.getElementById('s-res').style.display = 'none';
+  startRole(curRole);
 }
 
-function top(){
-  document.getElementById('s-res').classList.remove('on');
-  document.getElementById('s-quiz').style.display='none';
-  document.getElementById('s-role').style.display='block';
-  curRole=null; ans=[];
+function goTop() {
+  document.getElementById('s-res').style.display = 'none';
+  document.getElementById('s-quiz').style.display = 'none';
+  document.getElementById('s-role').style.display = 'block';
+  curRole = null;
+  ans = [];
 }
+
+// ── イベントバインド ──
+document.getElementById('btn-top').addEventListener('click', function() { startRole('top'); });
+document.getElementById('btn-jg').addEventListener('click',  function() { startRole('jg'); });
+document.getElementById('btn-mid').addEventListener('click', function() { startRole('mid'); });
+document.getElementById('btn-bot').addEventListener('click', function() { startRole('bot'); });
+document.getElementById('btn-sup').addEventListener('click', function() { startRole('sup'); });
+document.getElementById('btn-retry').addEventListener('click', retryQuiz);
+document.getElementById('btn-top2').addEventListener('click', goTop);
 </script>
 </body>
 </html>
